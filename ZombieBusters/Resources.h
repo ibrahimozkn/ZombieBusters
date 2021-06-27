@@ -5,9 +5,12 @@
 
 
 class Resources {
-public:
 
 private:
+	Resources() {
+
+	}
+
 };
 
 
