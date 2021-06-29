@@ -1,14 +1,28 @@
 #ifndef ZOMBIES_H
 #define ZOMBIES_H
 
-class Zombies {
+class Zombies : public Entity{
 private:
+	int Life;
 	int dmgPerHit;
 	int scorePerItem;
 public:
-	Zombies() {
-		dmgPerHit = 0;
-		scorePerItem = 0;
+	Zombies(int zombLife, int damage, int score, char repCharacter, int s) : Entity(repCharacter, s){
+		Life = zombLife;
+		dmgPerHit = damage;
+		scorePerItem = score;
+	}
+
+	int getLife() {
+		return this->Life;
+	}
+
+	int getdmgPerHit() {
+		return this->dmgPerHit;
+	}
+
+	int getscorePetItem() {
+		return scorePerItem;
 	}
 };
 

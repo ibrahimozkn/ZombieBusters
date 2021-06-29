@@ -1,7 +1,7 @@
 #include <iostream>
+#include "Dice.h"
 
 int main()
 {
-    std::cout << "Hello My World !\n";
-    std::cout << "can u see dis?!??!?\n\n";
+		
 }
