@@ -8,7 +8,7 @@ private:
 	int scorePerItem;
 	int alive;
 public:
-	Zombies(int zombLife, int damage, int score, char repCharacter, int s) : Entity(repCharacter, s){
+	Zombies( int zombLife,  int damage,  int score,  char repCharacter, int s) : Entity(repCharacter, s){
 		this->Life = zombLife;
 		this->dmgPerHit = damage;
 		this->scorePerItem = score;
@@ -37,7 +37,19 @@ public:
 };
 
 
-class LargeZombie
+class LargeZombie : public Zombies {
+public:
+	LargeZombie() : Zombies(12, 8, 100, 'L', 3) {};
+};
 
+class MediumZombie : public Zombies {
+public:
+	MediumZombie() : Zombies(8, 4, 75, 'M', 2) {};
+};
+
+class SmallZombie : public Zombies {
+public:
+	SmallZombie() : Zombies(4, 2, 50, 'S', 1) {};
+};
 
 #endif
