@@ -6,11 +6,13 @@ private:
 	int Life;
 	int dmgPerHit;
 	int scorePerItem;
+	int alive;
 public:
 	Zombies(int zombLife, int damage, int score, char repCharacter, int s) : Entity(repCharacter, s){
-		Life = zombLife;
-		dmgPerHit = damage;
-		scorePerItem = score;
+		this->Life = zombLife;
+		this->dmgPerHit = damage;
+		this->scorePerItem = score;
+		this->alive = 1;
 	}
 
 	int getLife() {
@@ -24,7 +26,18 @@ public:
 	int getscorePetItem() {
 		return scorePerItem;
 	}
+
+	void updateHealth(int dmgTaken) {
+		this->Life -= dmgTaken;
+
+		if (this->Life <= 0) {
+			this->alive = 0;
+		}
+	}
 };
+
+
+class LargeZombie
 
 
 #endif
