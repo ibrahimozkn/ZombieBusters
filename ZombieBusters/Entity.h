@@ -2,6 +2,12 @@
 #define ENTITY_H
 
 #include <iostream>
+#include <vector>
+
+struct coordinate {
+	int x;
+	int y;
+};
 
 class Entity {
 private:
