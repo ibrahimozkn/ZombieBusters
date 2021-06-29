@@ -7,9 +7,9 @@ using std::cout;
 
 int main()
 {
-	Zombies* z;
-	z = new SmallZombie();
-	cout << z->getLife();
+	srand(time(NULL));
+
+	cout << rollDice(5);
 
 	return 0;
 }
