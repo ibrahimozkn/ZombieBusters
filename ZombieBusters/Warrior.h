@@ -11,42 +11,54 @@ private:
 	int alive;
 	int score;
 	vector<coordinate> past_coordinates;
-	vector<char> kill_history;
 	int i;
+protected:
+	vector<char> kill_history;
 public:
-	Warrior(int life, int ammu, int unit_size, char rep_Character) : Entity(rep_Character, unit_size) {
+	Warrior(int life, int ammo, int unit_size, char rep_Character) : Entity(rep_Character, unit_size) {
 		life_points = life;
-		ammunition = ammu;
+		ammunition = ammo;
 		alive = 1;
 		score = 0;
 		i = 0;
 	}
 	int get_life();
-	int get_ammu();
-	void set_life(int);
-	void set_ammu(int);
+	int get_ammo();
+	void reduce_life(int);
+	void add_life(int);
+	void reduce_ammo(int);
+	void add_ammo(int);
 	int check_alive();
 	void add_kill(char);
 	void add_coordinate(int, int);
-	virtual int attack() = 0;
+	virtual int attack(int) = 0;
 };
 
 int Warrior::get_life() {
 	return life_points;
 }
-int Warrior::get_ammu() {
+int Warrior::get_ammo() {
 	return ammunition;
 }
 
-void Warrior::set_life(int l) {
-	life_points = l;
+void Warrior::reduce_life(int l) {
+	life_points -= l;
 
 	if (life_points < 1) {
 		alive = 0;
 	}
 }
-void Warrior::set_ammu(int a) {
-	ammunition = a;
+
+void Warrior::add_life(int l) {
+	life_points += l;
+}
+
+void Warrior::reduce_ammo(int a) {
+	ammunition -= a;
+}
+
+void Warrior::add_ammo(int a) {
+	ammunition += a;
 }
 
 int Warrior::check_alive() {
