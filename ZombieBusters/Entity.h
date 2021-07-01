@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+using std::cout;
 
 struct coordinate {
 	int x;

@@ -30,7 +30,9 @@ public:
 	void add_ammo(int);
 	int check_alive();
 	void add_kill(char);
+	void print_kill_history();
 	void add_coordinate(int, int);
+	vector<coordinate> get_past_coordinates();
 	virtual int attack(int) = 0;
 };
 
@@ -78,11 +80,36 @@ void Warrior::add_kill(char zombie) {
 	kill_history.push_back(zombie);
 }
 
+void Warrior::print_kill_history() {
+	int i;
+	for (i = 0; i < kill_history.size(); i++) {
+		if (kill_history[i] == 'L') {
+			cout << "Large Zombie";
+		}
+		else if (kill_history[i] == 'M') {
+			cout << "Medium Zombie";
+		}
+		else if (kill_history[i] == 'S') {
+			cout << "Small Zombie";
+		}
+		if ((kill_history.size() - i) == 1) {
+			cout << ".\n";
+		}
+		else {
+			cout << ",";
+		}
+	}
+}
+
 void Warrior::add_coordinate(int X, int Y) {
 	past_coordinates.push_back(coordinate());
 	past_coordinates[i].x = X;
 	past_coordinates[i].y = Y;
 	i++;
+}
+
+vector<coordinate> Warrior::get_past_coordinates() {
+	return past_coordinates;
 }
 
 #endif
