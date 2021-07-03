@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-using std::cout;
+using namespace std;
 
 struct coordinate {
 	int x;
@@ -30,6 +30,8 @@ public:
 	int get_Size() {
 		return Size;
 	}
+
+
 };
 
 

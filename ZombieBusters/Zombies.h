@@ -40,7 +40,7 @@ public:
 };
 
 
-class LargeZombie : public Zombies {
+class LargeZombie : public Zombies{
 public:
 	LargeZombie() : Zombies(12, 8, 100, 'L', 3) {};
 };
