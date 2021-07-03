@@ -13,9 +13,9 @@ int main(){
 
 	srand(time(NULL));
 
-	Warrior* w = new Derick();
+	Warrior* w = new Chichonne();
 	Zombies* z = new LargeZombie();
 
-	cout << Battle(*z, *w);
+	int s = Battle(z, w);
 	return 0;
 }

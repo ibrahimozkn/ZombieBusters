@@ -20,10 +20,8 @@ public:
 			if (mega_status == 1) {
 				return 6;
 			}
-			else {
-				return 4;
-			}
 		}
+		return 4;
 	}
 	int check_mega_status();
 	void update_mega_status();
@@ -34,7 +32,8 @@ int Chichonne::check_mega_status() {
 }
 
 void Chichonne::update_mega_status() {
-	if (kill_history.size() >= 2) {
+	if (kill_history.size() >= 2 && mega_status != 1) {
+		cout << "Your katana has upgraded to a MEGA KATANA!\n";
 		mega_status = 1;
 	}
 }
