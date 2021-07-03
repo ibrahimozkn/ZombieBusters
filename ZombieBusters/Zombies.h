@@ -19,7 +19,12 @@ public:
 
 
 	int getLife() {
-		return this->Life;
+		if (this->Life < 0) {
+			return 0;
+		}
+		else {
+			return this->Life;
+		}
 	}
 
 	int getdmgPerHit() {

@@ -37,7 +37,12 @@ public:
 };
 
 int Warrior::get_life() {
-	return life_points;
+	if (this->life_points < 0) {
+		return 0;
+	}
+	else {
+		return this->life_points;
+	}
 }
 int Warrior::get_ammo() {
 	return ammunition;
@@ -45,10 +50,6 @@ int Warrior::get_ammo() {
 
 void Warrior::reduce_life(int l) {
 	life_points -= l;
-
-	if (life_points < 1) {
-		alive = 0;
-	}
 }
 
 void Warrior::add_life(int l) {
