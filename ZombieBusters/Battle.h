@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Zombies.h"
 #include "Warrior.h"
+#include "Derick.h"
+#include "Chichonne.h"
 #include "Dice.h"
 
 using std::cout;
@@ -27,14 +29,14 @@ int Battle(Zombies& zombie, Warrior& warrior) {
 					if (warrior.get_Character() == 'D') {
 						for (i = 0; i < 2; i++) { 
 							diceVal = rollDice();
-							cout << "\nYou rolled " << diceVal;
+							cout << "\nYou rolled " << diceVal << "\n";
 							wAttack += warrior.attack(1) * diceVal; 
 						}
 					}
 					else {
 						diceVal = rollDice();
 						wAttack = warrior.attack(1) * diceVal;
-						cout << "\nYou rolled " << diceVal;
+						cout << "\nYou rolled " << diceVal << "\n";
 					}
 				}
 			}
@@ -42,12 +44,12 @@ int Battle(Zombies& zombie, Warrior& warrior) {
 				wAttack = warrior.attack(2);
 			}
 			zombie.updateHealth(wAttack);
-			cout << "You hit " << wAttack << "to Zombie\n";
-			cout << "\nZombie's remaining life " << ((zombie.getLife() < 0) ? '0' : zombie.getLife());
+			cout << "\nYou hit " << wAttack << " to Zombie\n";
+			cout << "\nZombie's remaining life " << ((zombie.getLife() < 0) ? '0' : zombie.getLife()) << "\n";
 		
 		}else {
 			warrior.reduce_life(zombie.getdmgPerHit());
-			cout << "\nZombie hit" << zombie.getdmgPerHit();
+			cout << "\nZombie hit" << zombie.getdmgPerHit() << "\n";
 
 			cout << "\n" << ((warrior.get_Character() == 'D') ? "Derick" : "Chichonne") << "'s remaining life " << ((warrior.get_life() < 0) ? '0' : warrior.get_life()) << "\n";
 		}

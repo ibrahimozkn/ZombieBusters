@@ -2,7 +2,7 @@
 #define DICE_H
 
 #include <iostream>
-#include <time.h>
+
 
 using std::cout;
 
