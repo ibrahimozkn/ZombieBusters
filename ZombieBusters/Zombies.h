@@ -1,6 +1,8 @@
 #ifndef ZOMBIES_H
 #define ZOMBIES_H
 
+#include "Entity.h"
+
 class Zombies : public Entity{
 private:
 	int Life;
@@ -14,6 +16,7 @@ public:
 		this->scorePerItem = score;
 		this->alive = 1;
 	}
+
 
 	int getLife() {
 		return this->Life;
