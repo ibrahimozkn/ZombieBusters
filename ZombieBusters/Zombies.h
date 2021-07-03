@@ -27,7 +27,11 @@ public:
 	}
 
 	int getscorePetItem() {
-		return scorePerItem;
+		return this->scorePerItem;
+	}
+
+	int isAlive() {
+		return this->alive;
 	}
 
 	void updateHealth(int dmgTaken) {

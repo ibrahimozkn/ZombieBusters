@@ -10,14 +10,9 @@ public:
 	}
 	int attack(int choice) {
 		if (choice == 1) {
-			this->reduce_ammo(2);
-			return 10;
-		}
-		else if (choice == 2) {
 			this->reduce_ammo(1);
 			return 5;
-		}
-		else if(choice == 3){
+		}else{
 			return 1;
 		}
 	}

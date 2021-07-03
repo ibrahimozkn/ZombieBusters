@@ -64,7 +64,10 @@ void Warrior::add_ammo(int a) {
 }
 
 int Warrior::check_alive() {
-	return alive;
+	if (this->life_points <= 0) {
+		this->alive = 0;
+	}
+	return this->alive;
 }
 
 void Warrior::add_kill(char zombie) {
@@ -82,7 +85,7 @@ void Warrior::add_kill(char zombie) {
 
 void Warrior::print_kill_history() {
 	int i;
-	for (i = 0; i < kill_history.size(); i++) {
+	for (i = 0; kill_history.size() > i; i++) {
 		if (kill_history[i] == 'L') {
 			cout << "Large Zombie";
 		}
