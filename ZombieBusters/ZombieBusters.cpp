@@ -11,16 +11,10 @@
 using std::cout;
 
 int main(){
-
+	
 
 	Grid* G = new Grid(5);
-	coordinate* c1 = new coordinate();
-	coordinate* c2 = new coordinate();
-	c1->x = 0;
-	c1->y = 0;
-	c2->x = 3;
-	c2->y = 4;
-	G->initialize_grid('D', c1, 'C', c2);
+	G->deploy_('D', 'C');
 	G->print_grid();
 	
 
