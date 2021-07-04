@@ -6,15 +6,30 @@
 
 struct element{
 	int empty;
-	Entity* E;
+	Warrior* W;
+	Resources* R;
+	Zombies* Z;
 	char character;
 };
 
+coordinate rand_coordinate(int);
+int rand_divider(int);
 
 class Grid {
 private:
 	int size;
 	vector<vector<element>> grid;
+
+	vector<Ammunition*> ammo_vector;
+	vector<SmallMedicineKit*> s_med_vector;
+	vector<LargeMedicineKit*> l_med_vector;
+	vector<SmallZombie*> s_zombie_vector;
+	vector<MediumZombie*> m_zombie_vector;
+	vector<LargeZombie*> l_zombie_vector;
+
+	coordinate P1_location;
+	coordinate P2_location;
+
 public:
 	Grid(int s) {
 		size = s;
@@ -24,19 +39,26 @@ public:
 			for (j = 0; j < size; j++) {
 				grid[i].push_back(element());
 				grid[i][j].empty = 1;
-				grid[i][j].E = NULL;
+				grid[i][j].W = NULL;
+				grid[i][j].R = NULL;
+				grid[i][j].Z = NULL;
 				grid[i][j].character = '-';
 			}
 		}
 	}
 
-	vector<coordinate> find_free_space(int);
-	void deploy_(char, char);
+	//coordinate find_free_space();
+	//void deploy_(char, char);
 	
+	void deploy(char, char);
+	void deploy_derick(int);
+	void deploy_chichonne(int);
+	coordinate find_coordinate();
+
+	vector<coordinate> get_possible_destinations(int);
 
 	void print_grid() {
 		int i, j;
-		cout << "print";
 		for (i = 0; i < size; i++) {
 			for (j = 0; j < size; j++) {
 				cout << grid[i][j].character << " ";
@@ -45,7 +67,7 @@ public:
 		}
 	}
 };
-
+/*
 void Grid::deploy_(char C1, char C2) {
 	srand(time(NULL));
 	vector<coordinate> tmpvector;
@@ -81,7 +103,7 @@ void Grid::deploy_(char C1, char C2) {
 	int small_zombie_count = 1;
 	vector<SmallZombie*> small_zombie_vector;
 	int small_zombie_index = 0;
-	*/
+	
 	int tmpx, tmpy;
 
 	if (C1 == 'D') {
@@ -189,7 +211,7 @@ void Grid::deploy_(char C1, char C2) {
 	}
 	
 	//small
-	/*
+	
 	tmpvector = find_free_space(1);
 	tmpx = tmpvector[0].x;
 	tmpy = tmpvector[0].y;
@@ -280,23 +302,196 @@ void Grid::deploy_(char C1, char C2) {
 
 			medium_zombie_count--;
 		}
-	}*/
+	}
 	cout << "test end";
 }
 
-vector<coordinate> Grid::find_free_space(int n) {
-	int x = n; int done = 0; int i, j; int count = 0;
-	vector<coordinate> free_spaces;
+coordinate Grid::find_free_space() {
 	int tmpx = rand() % size;
 	int tmpy = rand() % size;
-	int randnum = -1;
 
 	while (grid[tmpx][tmpy].empty == 0) {
-		int tmpx = rand() % size;
-		int tmpy = rand() % size;
+		tmpx = rand() % size;
+		tmpy = rand() % size;
 	}
-	free_spaces.push_back({ tmpx,tmpy });
+	coordinate tmp_coordinate = { tmpx,tmpy }
 	
+	return tmp_coordinate;
+}
+*/
+void Grid::deploy(char p1, char p2) {
+	int ammo_count, med_count, s_med_count, l_med_count, zombie_count, s_zombie_count, m_zombie_count, l_zombie_count;
+	coordinate tmp;
+	srand(time(NULL));
+	//deploy warriors
+	if (p1 == 'D') {
+		deploy_derick();
+	}
+	else {
+		deploy_chichonne();
+	}
+	if (p2 == 'D') {
+		deploy_derick();
+	}
+	else {
+		deploy_chichonne();
+	}
+
+	//find resource and zombie count
+	ammo_count = 2 * ((size * size) / 25);
+	med_count = 3 * ((size * size) / 25);
+	s_med_count = rand_divider(med_count);
+	l_med_count = med_count - s_med_count;
+	zombie_count = 2 * ((size * size) / 25);
+	s_zombie_count = 1;
+	m_zombie_count = 1;
+	l_zombie_count = 1;
+	if (zombie_count > 3) {
+		while ((zombie_count - 3) > 0) {
+			if (rand() % 3 == 0) {
+				s_zombie_count++;
+			}
+			else if (rand() % 3 == 1) {
+				m_zombie_count++;
+			}
+			else {
+				l_zombie_count++;
+			}
+			zombie_count--;
+		}
+	}
+	//deploy ammo
+	Ammunition a;
+	while (ammo_count > 0) {
+		tmp = find_coordinate();
+		grid[tmp.x][tmp.y].R = &a;
+		grid[tmp.x][tmp.y].character = 'A';
+		grid[tmp.x][tmp.y].empty = 0;
+		ammo_count--;
+	}
+	//deploy medkits
+	SmallMedicineKit sm;
+	while (s_med_count > 0) {
+		tmp = find_coordinate();
+		grid[tmp.x][tmp.y].R = &sm;
+		grid[tmp.x][tmp.y].character = '+';
+		grid[tmp.x][tmp.y].empty = 0;
+		s_med_count--;
+	}
+	//deploy zombies
+	while (s_zombie_count > 0) {
+		tmp = find_coordinate();
+		SmallZombie* sz;
+		s_zombie_vector.push_back(sz);
+		grid[tmp.x][tmp.y].Z = s_zombie_vector[(s_zombie_vector.size() - 1)];
+		grid[tmp.x][tmp.y].character = 'S';
+		grid[tmp.x][tmp.y].empty = 0;
+		s_zombie_count--;
+	}
+}
+
+void Grid::deploy_derick(int player) {
+	coordinate tmp = rand_coordinate(size);
+	while (grid[tmp.x][tmp.y].empty == 0) {
+		tmp = rand_coordinate(size);
+	}
+
+	Derick* derick = new Derick();
+	grid[tmp.x][tmp.y].W = derick;
+	grid[tmp.x][tmp.y].character = 'D';
+	grid[tmp.x][tmp.y].empty = 0;
+
+	grid[tmp.x][tmp.y].W->add_coordinate(tmp.x, tmp.y);
+	if (player == 1) {
+		P1_location.x = tmp.x;
+		P1_location.y = tmp.y;
+	}
+	else {
+		P2_location.x = tmp.x;
+		P2_location.y = tmp.y;
+	}
+}
+void Grid::deploy_chichonne(int player) {
+	coordinate tmp = rand_coordinate(size);
+	while (grid[tmp.x][tmp.y].empty == 0) {
+		tmp = rand_coordinate(size);
+	}
+
+	Chichonne* chichonne = new Chichonne();
+	grid[tmp.x][tmp.y].W = chichonne;
+	grid[tmp.x][tmp.y].character = 'C';
+	grid[tmp.x][tmp.y].empty = 0;
+
+	grid[tmp.x][tmp.y].W->add_coordinate(tmp.x, tmp.y);
+	if (player == 1) {
+		P1_location.x = tmp.x;
+		P1_location.y = tmp.y;
+	}
+	else {
+		P2_location.x = tmp.x;
+		P2_location.y = tmp.y;
+	}
+}
+
+coordinate Grid::find_coordinate() {
+	int tmpx = rand() % size;
+	int tmpy = rand() % size;
+
+	while (grid[tmpx][tmpy].empty == 0) {
+		tmpx = rand() % size;
+		tmpy = rand() % size;
+	}
+	coordinate tmp_coordinate = { tmpx,tmpy };
+
+	return tmp_coordinate;
+}
+
+vector<coordinate> Grid::get_possible_destinations(int player) {
+	int tmpx, tmpy, i, j;
+	vector<coordinate> tmp;
+	if (player == 1) {
+		tmpx = P1_location.x;
+		tmpy = P1_location.y;
+	}
+	else {
+		tmpx = P2_location.x;
+		tmpy = P2_location.y;
+	}
+
+	for (i = -1; i < 2; i++) {
+		for (j = -1; j < 2; j++) {
+			if (((tmpx + i) >= 0 && (tmpy + j) >= 0) && !((tmpx + i == tmpx) && (tmpy + j == tmpy))) {
+				if (grid[(tmpx + i)][(tmpy + j)].W == NULL) {
+					tmp.push_back({ tmpx + i, tmpy + j });
+				}
+			}
+		}
+	}
+
+	return tmp;
+}
+
+coordinate rand_coordinate(int n) {
+	coordinate tmp;
+	tmp.x = rand() % n;
+	tmp.y = rand() % n;
+	return tmp;
+}
+
+int rand_divider(int a) {
+	int b = 0;
+	while (a > 0) {
+		if (rand() % 2 == 1) {
+			b++;
+		}
+		a--;
+		return b;
+	}
+}
+
+#endif
+
+/*//int x = n; int done = 0; int i, j; //int count = 0;	//int randnum = -1;
 	while ((x - 1) != 0) {
 		cout << " test ";
 		while (!done) {
@@ -322,8 +517,4 @@ vector<coordinate> Grid::find_free_space(int n) {
 
 		x--;
 	}
-
-	return free_spaces;
-}
-
-#endif
+	*/

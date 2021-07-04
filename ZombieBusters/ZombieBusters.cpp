@@ -13,8 +13,8 @@ using std::cout;
 int main(){
 	
 
-	Grid* G = new Grid(5);
-	G->deploy_('D', 'C');
+	Grid* G = new Grid(7);
+	G->deploy('D', 'C');
 	G->print_grid();
 	
 
