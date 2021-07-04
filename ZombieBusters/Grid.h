@@ -36,6 +36,7 @@ public:
 
 	void print_grid() {
 		int i, j;
+		cout << "print";
 		for (i = 0; i < size; i++) {
 			for (j = 0; j < size; j++) {
 				cout << grid[i][j].character << " ";
@@ -66,9 +67,21 @@ void Grid::deploy_(char C1, char C2) {
 	int small_medcount = 0;
 	vector<SmallMedicineKit*> small_med_vector;
 	int small_med_index = 0;
-
+	/*
 	int zombie_count = 2 * ((size * size) / 25);
 
+	int large_zombie_count = 1;
+	vector<LargeZombie*> large_zombie_vector;
+	int large_zombie_index = 0;
+
+	int medium_zombie_count = 1;
+	vector<MediumZombie*> medium_zombie_vector;
+	int medium_zombie_index = 0;
+
+	int small_zombie_count = 1;
+	vector<SmallZombie*> small_zombie_vector;
+	int small_zombie_index = 0;
+	*/
 	int tmpx, tmpy;
 
 	if (C1 == 'D') {
@@ -100,11 +113,15 @@ void Grid::deploy_(char C1, char C2) {
 		grid[randx2][randy2].empty = 0;
 	}
 
+	
+
 	while (ammo_count > 0) {
 
 		tmpvector = find_free_space(1);
 		tmpx = tmpvector[0].x;
 		tmpy = tmpvector[0].y;
+		tmpvector.clear();
+		tmpvector.shrink_to_fit();
 
 		Ammunition* a;
 		ammo_vector.push_back(a);
@@ -115,7 +132,7 @@ void Grid::deploy_(char C1, char C2) {
 
 		ammo_count--;
 	}
-	
+	cout << "test b4 med";
 	while (med_count > 0) {
 		if (rand() % 2 == 1) {
 			large_medcount++;
@@ -125,53 +142,146 @@ void Grid::deploy_(char C1, char C2) {
 		}
 		med_count--;
 	}
-
+	cout << "test b4 small med";
 	while (small_medcount > 0) {
 
 		tmpvector = find_free_space(1);
 		tmpx = tmpvector[0].x;
 		tmpy = tmpvector[0].y;
+		tmpvector.clear();
+		tmpvector.shrink_to_fit();
 
-		SmallMedicineKit* s;
-		small_med_vector.push_back(s);
+		SmallMedicineKit* sm;
+		small_med_vector.push_back(sm);
 		grid[tmpx][tmpy].E = small_med_vector[small_med_index];
-		grid[tmpx][tmpy].character = 'S';
+		grid[tmpx][tmpy].character = '+';
 		grid[tmpx][tmpy].empty = 0;
 		small_med_index++;
 
 		small_medcount--;
 	}
-	cout << "\nlarge med count: " << large_medcount << "\n";
+	cout << "test b4 large med";
 	while (large_medcount > 0) {
 		tmpvector = find_free_space(2);
-		
 		
 
 		tmpx = tmpvector[0].x;
 		tmpy = tmpvector[0].y;
+		tmpvector.clear();
+		tmpvector.shrink_to_fit();
 
-		cout << "\n\n" << tmpx << "," << tmpy << "\n\n";
-
-		LargeMedicineKit* s;
-		large_med_vector.push_back(s);
+		LargeMedicineKit* lm;
+		large_med_vector.push_back(lm);
 		grid[tmpx][tmpy].E = large_med_vector[large_med_index];
-		grid[tmpx][tmpy].character = 'L';
+		grid[tmpx][tmpy].character = '*';
 		grid[tmpx][tmpy].empty = 0;
 
 		tmpx = tmpvector[1].x;
 		tmpy = tmpvector[1].y;
 
-		cout << "\n\n" << tmpx << "," << tmpy << "\n\n";
-
 		grid[tmpx][tmpy].E = large_med_vector[large_med_index];
-		grid[tmpx][tmpy].character = 'L';
+		grid[tmpx][tmpy].character = '*';
 		grid[tmpx][tmpy].empty = 0;
 
-		large_med_index++
+		large_med_index++;
 
 		large_medcount--;
 	}
+	
+	//small
+	/*
+	tmpvector = find_free_space(1);
+	tmpx = tmpvector[0].x;
+	tmpy = tmpvector[0].y;
 
+	SmallZombie* s;
+	small_zombie_vector.push_back(s);
+	grid[tmpx][tmpy].E = small_zombie_vector[small_zombie_index];
+	grid[tmpx][tmpy].character = 'S';
+	grid[tmpx][tmpy].empty = 0;
+	small_zombie_index++;
+
+	small_zombie_count--;
+	//medium
+	tmpvector = find_free_space(2);
+
+	tmpx = tmpvector[0].x;
+	tmpy = tmpvector[0].y;
+	
+	MediumZombie* m;
+	medium_zombie_vector.push_back(m);
+	grid[tmpx][tmpy].E = medium_zombie_vector[medium_zombie_index];
+	grid[tmpx][tmpy].character = 'M';
+	grid[tmpx][tmpy].empty = 0;
+
+	tmpx = tmpvector[1].x;
+	tmpy = tmpvector[1].y;
+
+	grid[tmpx][tmpy].E = medium_zombie_vector[medium_zombie_index];
+	grid[tmpx][tmpy].character = 'M';
+	grid[tmpx][tmpy].empty = 0;
+
+	medium_zombie_index++;
+
+	medium_zombie_count--;
+	// medium end
+	
+	if (zombie_count > 3) {
+		while (zombie_count - 3 > 0) {
+
+			if (rand() % 3 == 0) {
+				large_zombie_count++;
+			}
+			else if(rand() % 3 == 1){
+				medium_zombie_count++;
+			}
+			else {
+				small_zombie_count++;
+			}
+			zombie_count--;
+		}
+
+		while (small_zombie_count > 0) {
+
+			tmpvector = find_free_space(1);
+			tmpx = tmpvector[0].x;
+			tmpy = tmpvector[0].y;
+
+			SmallZombie* s;
+			small_zombie_vector.push_back(s);
+			grid[tmpx][tmpy].E = small_zombie_vector[small_zombie_index];
+			grid[tmpx][tmpy].character = 'S';
+			grid[tmpx][tmpy].empty = 0;
+			small_zombie_index++;
+
+			small_zombie_count--;
+		}
+
+		while (medium_zombie_count > 0) {
+			tmpvector = find_free_space(2);
+
+			tmpx = tmpvector[0].x;
+			tmpy = tmpvector[0].y;
+
+			MediumZombie* s;
+			medium_zombie_vector.push_back(s);
+			grid[tmpx][tmpy].E = medium_zombie_vector[medium_zombie_index];
+			grid[tmpx][tmpy].character = 'M';
+			grid[tmpx][tmpy].empty = 0;
+
+			tmpx = tmpvector[1].x;
+			tmpy = tmpvector[1].y;
+
+			grid[tmpx][tmpy].E = medium_zombie_vector[medium_zombie_index];
+			grid[tmpx][tmpy].character = 'M';
+			grid[tmpx][tmpy].empty = 0;
+
+			medium_zombie_index++;
+
+			medium_zombie_count--;
+		}
+	}*/
+	cout << "test end";
 }
 
 vector<coordinate> Grid::find_free_space(int n) {
@@ -186,14 +296,15 @@ vector<coordinate> Grid::find_free_space(int n) {
 		int tmpy = rand() % size;
 	}
 	free_spaces.push_back({ tmpx,tmpy });
-
+	
 	while ((x - 1) != 0) {
-		
+		cout << " test ";
 		while (!done) {
+			cout << " test ";
 			for (i = -1; i < 2; i++) {
 				for (j = -1; j < 2; j++) {
 					if (((tmpx + i) >= 0 && (tmpy + j) >= 0) && !((tmpx + i == tmpx) && (tmpy + j == tmpy))) {
-						if (grid[tmpx + i][tmpy + j].empty == 1) {
+						if (grid[(tmpx + i)][(tmpy + j)].empty == 1) {
 							count++;
 							if (randnum >= 0) {
 								if (count == randnum) {
