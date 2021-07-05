@@ -422,8 +422,10 @@ Warrior* Grid::get_warrior(int player) {
 }
 
 void Grid::print_board() {
-	int i, j;
-	cout << "\n\n____________________________________________________________________\n";
+	int i, j, k;
+	for (k = 0; k < size; k++) {
+		cout << "__________";
+	}
 	for (i = 0; i < size; i++) {
 		for (j = 0; j < size; j++) {
 			if (grid[i][j].W != NULL) {
@@ -442,7 +444,7 @@ void Grid::print_board() {
 				cout << "[      ]  ";
 			}
 		}
-		cout << "\n____________________________________________________________________\n";
+		cout << "\n"; for (k = 0; k < size; k++) {cout << "__________";} cout << "\n";
 	}
 }
 
