@@ -14,21 +14,25 @@ struct element{
 
 coordinate rand_coordinate(int);
 int rand_divider(int);
+bool found_struct_in_vector(int, int, vector<coordinate>);
 
 class Grid {
 private:
 	int size;
+	int tot_zombie_count;
 	vector<vector<element>> grid;
 
-	vector<Ammunition*> ammo_vector;
-	vector<SmallMedicineKit*> s_med_vector;
-	vector<LargeMedicineKit*> l_med_vector;
-	vector<SmallZombie*> s_zombie_vector;
+	vector<Ammunition> ammo_vector;
+	vector<SmallMedicineKit> s_med_vector;
+	vector<LargeMedicineKit> l_med_vector;
+	vector<SmallZombie> s_zombie_vector;
 	vector<MediumZombie*> m_zombie_vector;
 	vector<LargeZombie*> l_zombie_vector;
 
 	coordinate P1_location;
 	coordinate P2_location;
+
+	
 
 public:
 	Grid(int s) {
@@ -56,12 +60,34 @@ public:
 	coordinate find_coordinate();
 
 	vector<coordinate> get_possible_destinations(int);
+	void move_warrior(int, int, int);
+
+	int check_win_condition();
+
+	vector<coordinate> get_free_neighbors(int, int);
 
 	void print_grid() {
 		int i, j;
 		for (i = 0; i < size; i++) {
 			for (j = 0; j < size; j++) {
-				cout << grid[i][j].character << " ";
+				if (grid[i][j].W != NULL) {
+					cout << grid[i][j].W->get_Character();
+				}
+				else {
+					cout << "-";
+				}
+				if (grid[i][j].R != NULL) {
+					cout << grid[i][j].R->get_Character();
+				}
+				else {
+					cout << "-";
+				}
+				if (grid[i][j].Z != NULL) {
+					cout << grid[i][j].Z->get_Character() << " ";
+				}
+				else {
+					cout << "- ";
+				}
 			}
 			cout << "\n";
 		}
@@ -321,20 +347,21 @@ coordinate Grid::find_free_space() {
 */
 void Grid::deploy(char p1, char p2) {
 	int ammo_count, med_count, s_med_count, l_med_count, zombie_count, s_zombie_count, m_zombie_count, l_zombie_count;
-	coordinate tmp;
+	coordinate tmp; int rand_num;
+	vector<coordinate> tmp_cvector;
 	srand(time(NULL));
 	//deploy warriors
 	if (p1 == 'D') {
-		deploy_derick();
+		deploy_derick(1);
 	}
 	else {
-		deploy_chichonne();
+		deploy_chichonne(1);
 	}
 	if (p2 == 'D') {
-		deploy_derick();
+		deploy_derick(2);
 	}
 	else {
-		deploy_chichonne();
+		deploy_chichonne(2);
 	}
 
 	//find resource and zombie count
@@ -343,6 +370,7 @@ void Grid::deploy(char p1, char p2) {
 	s_med_count = rand_divider(med_count);
 	l_med_count = med_count - s_med_count;
 	zombie_count = 2 * ((size * size) / 25);
+	tot_zombie_count = zombie_count;
 	s_zombie_count = 1;
 	m_zombie_count = 1;
 	l_zombie_count = 1;
@@ -364,30 +392,48 @@ void Grid::deploy(char p1, char p2) {
 	Ammunition a;
 	while (ammo_count > 0) {
 		tmp = find_coordinate();
-		grid[tmp.x][tmp.y].R = &a;
-		grid[tmp.x][tmp.y].character = 'A';
+		ammo_vector.push_back(Ammunition());
+		grid[tmp.x][tmp.y].R = &ammo_vector[ammo_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
+		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 		ammo_count--;
 	}
 	//deploy medkits
 	SmallMedicineKit sm;
 	while (s_med_count > 0) {
 		tmp = find_coordinate();
-		grid[tmp.x][tmp.y].R = &sm;
-		grid[tmp.x][tmp.y].character = '+';
+		s_med_vector.push_back(SmallMedicineKit());
+		grid[tmp.x][tmp.y].R = &s_med_vector[s_med_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
+		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 		s_med_count--;
 	}
+	while (l_med_count > 0) {
+		
+		tmp = find_coordinate();
+		l_med_vector.push_back(LargeMedicineKit());
+		grid[tmp.x][tmp.y].R = &l_med_vector[l_med_vector.size() - 1];
+		grid[tmp.x][tmp.y].empty = 0;
+		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
+
+		tmp_cvector = get_free_neighbors(tmp.x, tmp.y);
+		rand_num = rand() % (tmp_cvector.size());
+		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R = &l_med_vector[l_med_vector.size() - 1];
+		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
+		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
+
+		l_med_count--;
+	}
 	//deploy zombies
+	/*
 	while (s_zombie_count > 0) {
 		tmp = find_coordinate();
-		SmallZombie* sz;
-		s_zombie_vector.push_back(sz);
-		grid[tmp.x][tmp.y].Z = s_zombie_vector[(s_zombie_vector.size() - 1)];
+		s_zombie_vector.push_back(SmallZombie());
+		grid[tmp.x][tmp.y].Z = &s_zombie_vector[(s_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].character = 'S';
 		grid[tmp.x][tmp.y].empty = 0;
 		s_zombie_count--;
-	}
+	}*/
 }
 
 void Grid::deploy_derick(int player) {
@@ -460,7 +506,7 @@ vector<coordinate> Grid::get_possible_destinations(int player) {
 
 	for (i = -1; i < 2; i++) {
 		for (j = -1; j < 2; j++) {
-			if (((tmpx + i) >= 0 && (tmpy + j) >= 0) && !((tmpx + i == tmpx) && (tmpy + j == tmpy))) {
+			if (((tmpx + i) >= 0 && (tmpy + j) >= 0) && ((tmpx + i < size) && (tmpy + j < size)) && !(found_struct_in_vector(tmpx + i, tmpy + j, grid[tmpx][tmpy].W->get_past_coordinates()))) {
 				if (grid[(tmpx + i)][(tmpy + j)].W == NULL) {
 					tmp.push_back({ tmpx + i, tmpy + j });
 				}
@@ -469,6 +515,72 @@ vector<coordinate> Grid::get_possible_destinations(int player) {
 	}
 
 	return tmp;
+}
+
+void Grid::move_warrior(int player, int X, int Y) {
+	vector<coordinate> tmp;
+	int i = 0;
+	if (player == 1) {
+		grid[X][Y].W = grid[P1_location.x][P1_location.y].W;
+		grid[X][Y].W->add_coordinate(X, Y);
+		grid[P1_location.x][P1_location.y].W = NULL;
+		P1_location.x = X;
+		P1_location.y = Y;
+	}
+	else {
+		grid[X][Y].W = grid[P2_location.x][P2_location.y].W;
+		grid[X][Y].W->add_coordinate(X, Y);
+		grid[P2_location.x][P2_location.y].W = NULL;
+		P2_location.x = X;
+		P2_location.y = Y;
+	}
+
+	if (grid[X][Y].R != NULL) {
+		grid[X][Y].R->getEffect(grid[X][Y].W);
+		tmp = grid[X][Y].R->get_coordinates();
+		
+		while (i < tmp.size()) {
+			grid[tmp[i].x][tmp[i].y].R = NULL;
+			i++;
+		}
+	}
+	if (grid[X][Y].Z != NULL) {
+		if (Battle(grid[X][Y].Z, grid[X][Y].W) == 1) {
+			grid[X][Y].Z = NULL;
+			tot_zombie_count--;
+		}
+		else {
+			grid[X][Y].W = NULL;
+		}
+	}
+	
+}
+
+int Grid::check_win_condition() {
+	if (tot_zombie_count <= 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+vector<coordinate> Grid::get_free_neighbors(int X, int Y) {
+	int i, j;
+	vector<coordinate> tmp;
+
+	for (i = -1; i < 2; i++) {
+		for (j = -1; j < 2; j++) {
+			if (((X + i) >= 0 && (Y + j) >= 0) && ((X + i < size) && (Y + j < size))) {
+				if (grid[(X + i)][(Y + j)].W == NULL && grid[(X + i)][(Y + j)].R == NULL && grid[(X + i)][(Y + j)].Z == NULL) {
+					tmp.push_back({ X + i, Y + j });
+				}
+			}
+		}
+	}
+
+	return tmp;
+
 }
 
 coordinate rand_coordinate(int n) {
@@ -487,6 +599,16 @@ int rand_divider(int a) {
 		a--;
 		return b;
 	}
+}
+
+bool found_struct_in_vector(int X, int Y, vector<coordinate> v) {
+	int i;
+	for (i = 0; i < v.size(); i++) {
+		if (X == v[i].x && Y == v[i].y) {
+			return true;
+		}
+	}
+	return false;
 }
 
 #endif
