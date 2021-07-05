@@ -1,3 +1,6 @@
+/* Adil Bozkurt Kebapçýoðlu - 2455954
+I read and accept the submission rules and the important section specified in assignment file.
+This is my own work that is done by myself and my team-mate only */
 #ifndef CHICHONNE_H
 #define CHICHONNE_H
 

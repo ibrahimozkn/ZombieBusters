@@ -1,3 +1,6 @@
+/* Ibrahim Ozkan – 2456275
+I read and accept the submission rules and the important section specified in assignment file.
+This is my own work that is done by myself and my team-mate only */
 #ifndef DICE_H
 #define DICE_H
 
@@ -28,6 +31,10 @@ double rollDice() {
 
 	return rValue;
 
+}
+
+int chooseDice() {
+	return 1 + (rand() % 2);
 }
 
 

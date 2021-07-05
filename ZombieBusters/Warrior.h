@@ -1,3 +1,6 @@
+/* Adil Bozkurt Kebapçýoðlu - 2455954
+I read and accept the submission rules and the important section specified in assignment file.
+This is my own work that is done by myself and my team-mate only */
 #ifndef WARRIOR_H
 #define WARRIOR_H
 
@@ -34,6 +37,7 @@ public:
 	void add_coordinate(int, int);
 	vector<coordinate> get_past_coordinates();
 	virtual int attack(int) = 0;
+	int get_score();
 };
 
 int Warrior::get_life() {
@@ -53,7 +57,7 @@ void Warrior::reduce_life(int l) {
 }
 
 void Warrior::add_life(int l) {
-	life_points += l;
+	life_points = ((l + life_points) > 100) ? 100 : (life_points + l);
 }
 
 void Warrior::reduce_ammo(int a) {
@@ -100,9 +104,14 @@ void Warrior::print_kill_history() {
 			cout << ".\n";
 		}
 		else {
-			cout << ",";
+			cout << ", ";
 		}
 	}
+
+	if (kill_history.size() == 0) {
+		cout << "NONE\n\n";
+	}
+	
 }
 
 void Warrior::add_coordinate(int X, int Y) {
@@ -114,6 +123,10 @@ void Warrior::add_coordinate(int X, int Y) {
 
 vector<coordinate> Warrior::get_past_coordinates() {
 	return past_coordinates;
+}
+
+int Warrior::get_score() {
+	return score;
 }
 
 #endif
