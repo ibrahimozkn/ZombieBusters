@@ -11,7 +11,7 @@
 using std::cout;
 
 int main(){
-	
+	srand(time(NULL));
 	cout << "-------------------------------------------------------------------------\n";
 	cout << R"(
  ______                _     _       ______           _                
@@ -24,10 +24,11 @@ int main(){
                                                                       )";
 	cout << "\n-------------------------------------------------------------------------\n";
 	cout << "\n-> Welcome to ZombieBusters!\n-> Your goal is to clear the island which is raided by the zombies! \n-> The objective of the game is to clean the island together;"
-		<< "however, you can also score and compete with your teammate depending on the number and sizes of the Zombies you kill.\n";
+		<< "however, you can also score and compete with your teammate depending on the number and sizes of the Zombies you kill.\n\n\n";
+
 
 	int i;
-	Grid* G = new Grid(5);
+	Grid* G = new Grid(7);
 	G->deploy('D', 'C');
 	G->print_grid();
 

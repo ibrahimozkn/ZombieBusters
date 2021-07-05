@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 #include <time.h>
+#include <cmath>
 
 struct element{
 	int empty;
@@ -387,24 +388,30 @@ void Grid::deploy(char p1, char p2) {
 			zombie_count--;
 		}
 	}
+	
 	//deploy ammo
 	//Ammunition a;
-	cout << "\nammo count is " << ammo_count << "\n";
 	while (ammo_count > 0) {
 		tmp = find_coordinate();
-		ammo_vector.push_back(Ammunition());
-		cout << "\nammo char: " << ammo_vector[ammo_vector.size() - 1].get_Character() << "\n";
-		grid[tmp.x][tmp.y].R = &ammo_vector[ammo_vector.size() - 1];
+		//ammo_vector.push_back(Ammunition());
+		//cout << "\nammo char: " << ammo_vector[ammo_vector.size() - 1].get_Character() << "\n";
+		static Ammunition a;
+		grid[tmp.x][tmp.y].R = &a;
+			//&ammo_vector[ammo_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 		ammo_count--;
 	}
+	
 	//deploy medkits
 	//SmallMedicineKit sm;
+	
 	while (s_med_count > 0) {
 		tmp = find_coordinate();
-		s_med_vector.push_back(SmallMedicineKit());
-		grid[tmp.x][tmp.y].R = &s_med_vector[s_med_vector.size() - 1];
+		//s_med_vector.push_back(SmallMedicineKit());
+		static SmallMedicineKit sm;
+		grid[tmp.x][tmp.y].R = &sm;
+			//&s_med_vector[s_med_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 		s_med_count--;
@@ -412,14 +419,17 @@ void Grid::deploy(char p1, char p2) {
 	while (l_med_count > 0) {
 		
 		tmp = find_coordinate();
-		l_med_vector.push_back(LargeMedicineKit());
-		grid[tmp.x][tmp.y].R = &l_med_vector[l_med_vector.size() - 1];
+		//l_med_vector.push_back(LargeMedicineKit());
+		static LargeMedicineKit lm;
+		grid[tmp.x][tmp.y].R = &lm;
+			//&l_med_vector[l_med_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 
 		tmp_cvector = get_free_neighbors(tmp.x, tmp.y);
 		rand_num = rand() % (tmp_cvector.size());
-		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R = &l_med_vector[l_med_vector.size() - 1];
+		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R = &lm;
+			//&l_med_vector[l_med_vector.size() - 1];
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 
@@ -429,22 +439,27 @@ void Grid::deploy(char p1, char p2) {
 	
 	while (s_zombie_count > 0) {
 		tmp = find_coordinate();
-		s_zombie_vector.push_back(SmallZombie());
-		grid[tmp.x][tmp.y].Z = &s_zombie_vector[(s_zombie_vector.size() - 1)];
+		//s_zombie_vector.push_back(SmallZombie());
+		static SmallZombie sz;
+		grid[tmp.x][tmp.y].Z = &sz;
+			//&s_zombie_vector[(s_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].Z->add_coordinate(tmp.x, tmp.y);
 		s_zombie_count--;
 	}
 	while (m_zombie_count > 0) {
 		tmp = find_coordinate();
-		m_zombie_vector.push_back(MediumZombie());
-		grid[tmp.x][tmp.y].Z = &m_zombie_vector[(m_zombie_vector.size() - 1)];
+		//m_zombie_vector.push_back(MediumZombie());
+		static MediumZombie mz;
+		grid[tmp.x][tmp.y].Z = &mz;
+			//&m_zombie_vector[(m_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].Z->add_coordinate(tmp.x, tmp.y);
 
 		tmp_cvector = get_free_neighbors(tmp.x, tmp.y);
 		rand_num = rand() % (tmp_cvector.size());
-		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = &m_zombie_vector[m_zombie_vector.size() - 1];
+		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = &mz;
+			//&m_zombie_vector[m_zombie_vector.size() - 1];
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 
@@ -452,14 +467,17 @@ void Grid::deploy(char p1, char p2) {
 	}
 	while (l_zombie_count > 0) {
 		tmp = find_coordinate();
-		l_zombie_vector.push_back(LargeZombie());
-		grid[tmp.x][tmp.y].Z = &l_zombie_vector[(l_zombie_vector.size() - 1)];
+		static LargeZombie lz;
+		//l_zombie_vector.push_back(LargeZombie());
+		grid[tmp.x][tmp.y].Z = &lz;
+			//&l_zombie_vector[(l_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].Z->add_coordinate(tmp.x, tmp.y);
 
 		tmp_cvector = get_free_neighbors(tmp.x, tmp.y);
 		rand_num = rand() % (tmp_cvector.size());
-		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = &l_zombie_vector[l_zombie_vector.size() - 1];
+		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = &lz;
+			//&l_zombie_vector[l_zombie_vector.size() - 1];
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 
@@ -467,7 +485,8 @@ void Grid::deploy(char p1, char p2) {
 		tmp_cvector = get_free_neighbors(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 		if (tmp_cvector.size() != 0) {
 			rand_num = rand() % (tmp_cvector.size());
-			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = &l_zombie_vector[l_zombie_vector.size() - 1];
+			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = &lz;
+				//&l_zombie_vector[l_zombie_vector.size() - 1];
 			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 		}
@@ -642,7 +661,7 @@ coordinate rand_coordinate(int n) {
 }
 
 int rand_divider(int a) {
-	int b = 0;
+	int b = 1;
 	while (a > 0) {
 		if (rand() % 2 == 1) {
 			b++;
