@@ -10,10 +10,10 @@ class Chichonne : public Warrior {
 private:
 	int mega_status;
 public:
-	Chichonne() : Warrior(100, 25, 1, 'C') {
+	Chichonne() : Warrior(100, 25, 1, 'C') { //constructor
 		mega_status = 0;
 	}
-	int attack(int choice) {
+	int attack(int choice) { // chichonnes attack function, returns damage, updates sword mega status
 		update_mega_status();
 		if (choice == 1) {
 			this->reduce_ammo(1);

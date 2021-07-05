@@ -8,10 +8,10 @@ This is my own work that is done by myself and my team-mate only */
 
 class Derick : public Warrior {
 public:
-	Derick() : Warrior(100, 30, 1, 'D') {
+	Derick() : Warrior(100, 30, 1, 'D') { // constructor
 
 	}
-	int attack(int choice) {
+	int attack(int choice) { //dericks attack function, returns damage
 		if (choice == 1) {
 			this->reduce_ammo(1);
 			return 5;

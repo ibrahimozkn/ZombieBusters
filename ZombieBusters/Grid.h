@@ -8,7 +8,7 @@ This is my own work that is done by myself and my team-mate only */
 #include <time.h>
 #include <cmath>
 
-struct element{
+struct element{ //represents each grid element
 	int empty;
 	Warrior* W;
 	Resources* R;
@@ -24,23 +24,16 @@ class Grid {
 private:
 	int size;
 	int tot_zombie_count;
-	vector<vector<element>> grid;
-	/*
-	vector<Ammunition> ammo_vector;
-	vector<SmallMedicineKit> s_med_vector;
-	vector<LargeMedicineKit> l_med_vector;
-	vector<SmallZombie> s_zombie_vector;
-	vector<MediumZombie> m_zombie_vector;
-	vector<LargeZombie> l_zombie_vector;*/
+	vector<vector<element>> grid; //the grid
 
-	coordinate P1_location;
+	coordinate P1_location; //coordinates of each player
 	coordinate P2_location;
 
-	Warrior* W1;
+	Warrior* W1; //pointers to each warrior
 	Warrior* W2;
 
 public:
-	Grid(int s) {
+	Grid(int s) { //constructor
 		size = s;
 		int i, j;
 		for (i = 0; i < size; i++) {
@@ -56,8 +49,6 @@ public:
 		}
 	}
 
-	//coordinate find_free_space();
-	//void deploy_(char, char);
 	
 	void deploy(char, char);
 	void deploy_derick(int);
@@ -73,32 +64,6 @@ public:
 
 	Warrior* get_warrior(int);
 
-	void print_grid() {
-		int i, j;
-		for (i = 0; i < size; i++) {
-			for (j = 0; j < size; j++) {
-				if (grid[i][j].W != NULL) {
-					cout << grid[i][j].W->get_Character();
-				}
-				else {
-					cout << "-";
-				}
-				if (grid[i][j].R != NULL) {
-					cout << grid[i][j].R->get_Character();
-				}
-				else {
-					cout << "-";
-				}
-				if (grid[i][j].Z != NULL) {
-					cout << grid[i][j].Z->get_Character() << " ";
-				}
-				else {
-					cout << "- ";
-				}
-			}
-			cout << "\n";
-		}
-	}
 	void print_board();
 };
 
@@ -107,6 +72,7 @@ void Grid::deploy(char p1, char p2) {
 	coordinate tmp; int rand_num;
 	vector<coordinate> tmp_cvector;
 	srand(time(NULL));
+
 	//deploy warriors
 	if (p1 == 'D') {
 		deploy_derick(1);
@@ -147,28 +113,22 @@ void Grid::deploy(char p1, char p2) {
 	}
 	
 	//deploy ammo
-	//Ammunition a;
+
 	while (ammo_count > 0) {
 		tmp = find_coordinate();
-		//ammo_vector.push_back(Ammunition());
-		//cout << "\nammo char: " << ammo_vector[ammo_vector.size() - 1].get_Character() << "\n";
 		Ammunition *a = new Ammunition();
 		grid[tmp.x][tmp.y].R = a;
-			//&ammo_vector[ammo_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 		ammo_count--;
 	}
 	
 	//deploy medkits
-	//SmallMedicineKit sm;
 	
 	while (s_med_count > 0) {
 		tmp = find_coordinate();
-		//s_med_vector.push_back(SmallMedicineKit());
 		SmallMedicineKit *sm = new SmallMedicineKit();
 		grid[tmp.x][tmp.y].R = sm;
-			//&s_med_vector[s_med_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 		s_med_count--;
@@ -176,17 +136,14 @@ void Grid::deploy(char p1, char p2) {
 	while (l_med_count > 0) {
 		
 		tmp = find_coordinate();
-		//l_med_vector.push_back(LargeMedicineKit());
 		LargeMedicineKit *lm = new LargeMedicineKit();
 		grid[tmp.x][tmp.y].R = lm;
-			//&l_med_vector[l_med_vector.size() - 1];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].R->add_coordinate(tmp.x, tmp.y);
 
 		tmp_cvector = get_free_neighbors(tmp.x, tmp.y);
 		rand_num = rand() % (tmp_cvector.size());
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R = lm;
-			//&l_med_vector[l_med_vector.size() - 1];
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].R->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 
@@ -196,20 +153,16 @@ void Grid::deploy(char p1, char p2) {
 	
 	while (s_zombie_count > 0) {
 		tmp = find_coordinate();
-		//s_zombie_vector.push_back(SmallZombie());
 		SmallZombie *sz = new SmallZombie();
 		grid[tmp.x][tmp.y].Z = sz;
-			//&s_zombie_vector[(s_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].Z->add_coordinate(tmp.x, tmp.y);
 		s_zombie_count--;
 	}
 	while (m_zombie_count > 0) {
 		tmp = find_coordinate();
-		//m_zombie_vector.push_back(MediumZombie());
 		MediumZombie *mz = new MediumZombie();
 		grid[tmp.x][tmp.y].Z = mz;
-			//&m_zombie_vector[(m_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].Z->add_coordinate(tmp.x, tmp.y);
 
@@ -219,7 +172,6 @@ void Grid::deploy(char p1, char p2) {
 		}
 		rand_num = rand() % (tmp_cvector.size());
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = mz;
-			//&m_zombie_vector[m_zombie_vector.size() - 1];
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 
@@ -228,16 +180,13 @@ void Grid::deploy(char p1, char p2) {
 	while (l_zombie_count > 0) {
 		tmp = find_coordinate();
 		LargeZombie *lz = new LargeZombie();
-		//l_zombie_vector.push_back(LargeZombie());
 		grid[tmp.x][tmp.y].Z = lz;
-			//&l_zombie_vector[(l_zombie_vector.size() - 1)];
 		grid[tmp.x][tmp.y].empty = 0;
 		grid[tmp.x][tmp.y].Z->add_coordinate(tmp.x, tmp.y);
 
 		tmp_cvector = get_free_neighbors(tmp.x, tmp.y);
 		rand_num = rand() % (tmp_cvector.size());
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = lz;
-			//&l_zombie_vector[l_zombie_vector.size() - 1];
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 		grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 
@@ -246,7 +195,6 @@ void Grid::deploy(char p1, char p2) {
 		if (tmp_cvector.size() != 0) {
 			rand_num = rand() % (tmp_cvector.size());
 			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z = lz;
-				//&l_zombie_vector[l_zombie_vector.size() - 1];
 			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].empty = 0;
 			grid[tmp_cvector[rand_num].x][tmp_cvector[rand_num].y].Z->add_coordinate(tmp_cvector[rand_num].x, tmp_cvector[rand_num].y);
 		}
@@ -303,7 +251,7 @@ void Grid::deploy_chichonne(int player) {
 	}
 }
 
-coordinate Grid::find_coordinate() {
+coordinate Grid::find_coordinate() { // randomly finds an available coordinate in the grid
 	int tmpx = rand() % size;
 	int tmpy = rand() % size;
 
@@ -316,7 +264,7 @@ coordinate Grid::find_coordinate() {
 	return tmp_coordinate;
 }
 
-vector<coordinate> Grid::get_possible_destinations(int player) {
+vector<coordinate> Grid::get_possible_destinations(int player) { //returns coordinate vector that contains all coordinates that given player can move to
 	int tmpx, tmpy, i, j;
 	vector<coordinate> tmp;
 	if (player == 1) {
@@ -341,18 +289,18 @@ vector<coordinate> Grid::get_possible_destinations(int player) {
 	return tmp;
 }
 
-int Grid::move_warrior(int player, int X, int Y) {
+int Grid::move_warrior(int player, int X, int Y) { // moves warrior of given player to given location
 	vector<coordinate> tmp;
 	
 	int i = 0;
-	if (player == 1) {
+	if (player == 1) { //move player 1
 		grid[X][Y].W = grid[P1_location.x][P1_location.y].W;
 		grid[X][Y].W->add_coordinate(X, Y);
 		grid[P1_location.x][P1_location.y].W = NULL;
 		P1_location.x = X;
 		P1_location.y = Y;
 	}
-	else {
+	else { //move player 2
 		grid[X][Y].W = grid[P2_location.x][P2_location.y].W;
 		grid[X][Y].W->add_coordinate(X, Y);
 		grid[P2_location.x][P2_location.y].W = NULL;
@@ -360,7 +308,7 @@ int Grid::move_warrior(int player, int X, int Y) {
 		P2_location.y = Y;
 	}
 
-	if (grid[X][Y].R != NULL) {
+	if (grid[X][Y].R != NULL) { // if resource is found on moved location, apply effect, print board, then delete resource
 		grid[X][Y].R->getEffect(grid[X][Y].W);
 		tmp = grid[X][Y].R->get_coordinates();
 		print_board();
@@ -369,7 +317,7 @@ int Grid::move_warrior(int player, int X, int Y) {
 			i++;
 		}
 	}
-	else if (grid[X][Y].Z != NULL) {
+	else if (grid[X][Y].Z != NULL) {// if zombie is found on moved location, start battle, print board, kill zombie if battle returns 1 which means zombie is killed else warrior is removed
 		if (Battle(grid[X][Y].Z, grid[X][Y].W) == 1) {
 			cout << "\nYou killed the zombie!!\n";
 			tmp = grid[X][Y].Z->get_coordinates();
@@ -379,7 +327,6 @@ int Grid::move_warrior(int player, int X, int Y) {
 				grid[tmp[i].x][tmp[i].y].Z = NULL;
 				i++;
 			}
-			//delete[] grid[X][Y].Z;
 
 			tot_zombie_count--;
 			cout << "\nINFO -> There are " << tot_zombie_count << " zombies remaining to kill!\n";
@@ -411,7 +358,7 @@ int Grid::check_win_condition() {
 	}
 }
 
-vector<coordinate> Grid::get_free_neighbors(int X, int Y) {
+vector<coordinate> Grid::get_free_neighbors(int X, int Y) { // takes a grid coordinate and checks all surrounding coordinates and returns them all in a coordinate vector
 	int i, j;
 	vector<coordinate> tmp;
 
@@ -438,7 +385,7 @@ Warrior* Grid::get_warrior(int player) {
 	}
 }
 
-void Grid::print_board() {
+void Grid::print_board() { //displays board
 	int i, j, k;
 	cout << "     ";
 	for (k = 0; k < size; k++) {
@@ -480,14 +427,14 @@ void Grid::print_board() {
 	}
 }
 
-coordinate rand_coordinate(int n) {
+coordinate rand_coordinate(int n) { // returns a random coordinate depending in given grid size
 	coordinate tmp;
 	tmp.x = rand() % n;
 	tmp.y = rand() % n;
 	return tmp;
 }
 
-int rand_divider(int a) {
+int rand_divider(int a) { // takes a number and randomly divides it into 2 , returns single number but other can be found by (original_num - returned_num)
 	int b = 1;
 	while (a > 0) {
 		if (rand() % 2 == 1) {
@@ -498,7 +445,7 @@ int rand_divider(int a) {
 	}
 }
 
-bool found_struct_in_vector(int X, int Y, vector<coordinate> v) {
+bool found_struct_in_vector(int X, int Y, vector<coordinate> v) { //returns true if given coordinates are found within given coordinate vector, false if not
 	int i;
 	for (i = 0; i < v.size(); i++) {
 		if (X == v[i].x && Y == v[i].y) {

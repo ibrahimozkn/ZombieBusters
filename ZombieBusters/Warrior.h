@@ -18,7 +18,7 @@ private:
 protected:
 	vector<char> kill_history;
 public:
-	Warrior(int life, int ammo, int unit_size, char rep_Character) : Entity(rep_Character, unit_size) {
+	Warrior(int life, int ammo, int unit_size, char rep_Character) : Entity(rep_Character, unit_size) { //Warrior constructor, calls entity constructor
 		life_points = life;
 		ammunition = ammo;
 		alive = 1;
@@ -32,11 +32,11 @@ public:
 	void reduce_ammo(int);
 	void add_ammo(int);
 	int check_alive();
-	void add_kill(char);
-	void print_kill_history();
-	void add_coordinate(int, int);
-	vector<coordinate> get_past_coordinates();
-	virtual int attack(int) = 0;
+	void add_kill(char); //adds kill repreented by a char to kill_history vector 
+	void print_kill_history(); //checks prints kill_history vector
+	void add_coordinate(int, int); //adds coordinate to past_coordinates
+	vector<coordinate> get_past_coordinates(); //getter for past_coordinates
+	virtual int attack(int) = 0; // virtual attack function for subclasses Derick and Chichonne
 	int get_score();
 };
 
