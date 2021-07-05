@@ -47,8 +47,6 @@ int main(){
 	/*for (i = 0; i < G->get_free_neighbors(testx, testy).size(); i++) {
 		cout << G->get_free_neighbors(testx, testy)[i].x << ", " << G->get_free_neighbors(testx, testy)[i].y << "\n";
 	}*/
-
-	G->print_grid();
 	
 
 	return 0;
