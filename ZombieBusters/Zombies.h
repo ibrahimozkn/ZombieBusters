@@ -9,6 +9,7 @@ private:
 	int dmgPerHit;
 	int scorePerItem;
 	int alive;
+	vector<coordinate> coordinates;
 public:
 	Zombies( int zombLife,  int damage,  int score,  char repCharacter, int s) : Entity(repCharacter, s){
 		this->Life = zombLife;
@@ -46,6 +47,8 @@ public:
 			this->alive = 0;
 		}
 	}
+	void add_coordinate(int x, int y) { coordinates.push_back({ x,y }); }
+	vector<coordinate> get_coordinates() { return coordinates; }
 };
 
 
