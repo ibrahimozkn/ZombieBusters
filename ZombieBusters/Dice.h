@@ -9,6 +9,16 @@ This is my own work that is done by myself and my team-mate only */
 
 using std::cout;
 
+/* ROLLDICE FUNCTION
+*
+* @desc: Rolls the dice and returns according coefficient of dice effect for damage calculation
+*
+* @param: void 
+* 
+* @return: double value of damage coefficient
+* 
+*/
+
 double rollDice() {
 	
 	
@@ -17,15 +27,15 @@ double rollDice() {
 
 	double rValue;
 
-	if (dice == 5 || dice == 6) {
-		cout << "Dice effect: Hell yeah, CRITICAL HIT!\n";
-		rValue = 2;
+	if (dice == 5 || dice == 6) { //if its 5-6
+		cout << "DICE EFFECT -> That's a lot of damage, CRITICAL HIT!\n";
+		rValue = 2; //critical hit coefficient of 2
 	}
-	else if (dice == 1 || dice == 2) {
-		cout << "Dice Effect: Oh no, Minor scratch :(\n";
+	else if (dice == 1 || dice == 2) { //if its 1-2 its minor scratch
+		cout << "DICE EFFECT -> Oh no, Minor scratch :(\n";
 		rValue = 0.40;
-	}else {
-		cout << "Dice Effect: NO EFFECT!\n";
+	}else { //otherwise no effect
+		cout << "DICE EFFECT -> NO EFFECT!\n";
 		rValue = 1;
 	}
 
@@ -33,7 +43,7 @@ double rollDice() {
 
 }
 
-int chooseDice() {
+int chooseDice() { //a dice for choosing player turn which produces a number between 1 to 2
 	return 1 + (rand() % 2);
 }
 
